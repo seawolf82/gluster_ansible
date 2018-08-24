@@ -1,0 +1,62 @@
+---
+
+- name: Install repository Gluster 4.1 
+  yum: name=centos-release-gluster41 state=present
+
+
+- name: ensure a list of gluster packages installed
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - heketi
+    - glusterfs-fuse
+    - glusterfs
+    - gluster-block
+    - glusterfs-events
+    - glusterfs-cli
+    - glusterfs-libs
+    - glusterfs-server
+
+- name: enable Glusterd service
+  systemd:
+    name: glusterd
+    enabled: yes
+
+
+- name: Make sure Gluster service is running
+  systemd:
+    state: started
+    name: glusterd
+
+
+- name: adding firewall rules for Gluster service
+  command: firewall-cmd --add-service=glusterfs --permanent
+
+- name: adding firewall rules for 24007/tcp Gluster Daemon 
+  command: firewall-cmd --add-port=24007/tcp --permanent
+  
+- name: adding firewall rules for 49152-49251/tcp Gluster brick port
+  command: firewall-cmd --add-port=49152-49251/tcp --permanent
+
+- name: adding firewall rules for 38465-38469/tcp Gluster NFS Service 
+  command: firewall-cmd --add-port=38465-38469/tcp --permanent
+
+- name: adding firewall rules for 111/TCP/UDP Portmapper 
+  command: firewall-cmd --add-port=111/tcp --add-port=111/udp --permanent
+  
+- name: adding firewall rules for 2049/tcp NFS Service 
+  command: firewall-cmd --add-port=2049/tcp --permanent
+  
+- name: adding firewall rules for 963/udp Gluster NFS's Lock Manager
+  command: firewall-cmd --add-port=963/udp --permanent
+  
+- name: adding firewall rules for 139/tcp Netbios service
+  command: firewall-cmd --add-port=139/tcp --permanent
+  
+- name: adding firewall rules for 445/tcp CIFS Protocol
+  command: firewall-cmd --add-port=445/tcp --permanent
+
+- name: adding firewall rules for 965/tcp Gluster NFS's Lock Manager
+  command: firewall-cmd --add-port=965/tcp --permanent
+  notify: Reloading firewalld rules

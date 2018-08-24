@@ -1,0 +1,9 @@
+[all]
+gluster1.localdomain
+gluster2.localdomain
+gluster3.localdomain
+
+[gluster-servers]
+gluster1.localdomain
+gluster2.localdomain
+gluster3.localdomain

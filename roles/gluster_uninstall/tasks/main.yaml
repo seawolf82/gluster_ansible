@@ -1,0 +1,107 @@
+---
+
+- name: disable Glusterd service
+  systemd:
+    name: glusterd
+    enabled: false
+
+- name: Make sure Gluster service is stopped
+  systemd:
+    state: stopped
+    name: glusterd
+
+
+- name: remove a list of Gluster 4.1 packages 
+  yum: name= "{{ packages }}" state=absent
+  vars:
+    packages:
+    - heketi
+    - glusterfs-fuse
+    - glusterfs
+    - gluster-block
+    - glusterfs-events
+    - glusterfs-cli
+    - glusterfs-libs
+    - glusterfs-server
+
+
+- name: remove heketi package
+  yum:
+    name: heketi
+    state: absent
+
+- name: remove glusterfs-fuse package
+  yum:
+    name: glusterfs-fuse
+    state: absent
+
+
+- name: remove glusterfs package
+  yum:
+    name: glusterfs
+    state: absent
+
+- name: remove gluster-block package
+  yum:
+    name: gluster-block
+    state: absent
+
+
+- name: remove glusterfs-events package
+  yum:
+    name: glusterfs-events
+    state: absent
+
+
+- name: remove glusterfs-cli package
+  yum:
+    name: gluster-block
+    state: absent
+
+
+- name: remove glusterfs-libs package
+  yum:
+    name: glusterfs-libs
+    state: absent
+
+
+- name: remove glusterfs-server package
+  yum:
+    name: glusterfs-server
+    state: absent
+
+
+- name: remove Gluster 4.1 repository 
+  yum: name=centos-release-gluster41 state=absent
+
+
+- name: removing firewall rules for Gluster service
+  command: firewall-cmd --remove-service=glusterfs --permanent
+
+- name: removing firewall rules for 24007/tcp Gluster Daemon 
+  command: firewall-cmd --remove-port=24007/tcp --permanent
+  
+- name: removing firewall rules for 49152-49251/tcp Gluster brick port
+  command: firewall-cmd --remove-port=49152-49251/tcp --permanent
+
+- name: removing firewall rules for 38465-38469/tcp Gluster NFS Service 
+  command: firewall-cmd --remove-port=38465-38469/tcp --permanent
+
+- name: removing firewall rules for 111/TCP/UDP Portmapper 
+  command: firewall-cmd --remove-port=111/tcp --remove-port=111/udp --permanent
+  
+- name: removing firewall rules for 2049/tcp NFS Service 
+  command: firewall-cmd --remove-port=2049/tcp --permanent
+  
+- name: removing firewall rules for 963/udp Gluster NFS's Lock Manager
+  command: firewall-cmd --remove-port=963/udp --permanent
+  
+- name: removing firewall rules for 139/tcp Netbios service
+  command: firewall-cmd --remove-port=139/tcp --permanent
+  
+- name: removing firewall rules for 445/tcp CIFS Protocol
+  command: firewall-cmd --remove-port=445/tcp --permanent
+
+- name: removing firewall rules for 965/tcp Gluster NFS's Lock Manager
+  command: firewall-cmd --remove-port=965/tcp --permanent
+  notify: Reloading firewalld rules

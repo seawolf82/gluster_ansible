@@ -1,0 +1,10 @@
+packages:
+  - wget
+  - curl
+  - bash-completion
+  - vim
+  - zip
+  - bzip2
+  - gzip
+  - net-tools
+
