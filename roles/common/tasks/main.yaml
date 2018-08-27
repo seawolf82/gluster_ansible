@@ -68,6 +68,11 @@
   when: ntp_manage_config 
 
   
+- name: Generate ntp.conf file
+  systemd:
+    name: ntpd
+    state: restarted 
+
 - name: Ensure ntp is running and enabled as configured
   service:
     name: ntpd
