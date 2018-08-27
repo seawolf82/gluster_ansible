@@ -68,7 +68,7 @@
   when: ntp_manage_config 
 
   
-- name: Generate ntp.conf file
+- name: Restart ntp daemon
   systemd:
     name: ntpd
     state: restarted 
