@@ -11,20 +11,6 @@
     name: glusterd
 
 
-- name: remove a list of Gluster 4.1 packages 
-  yum: name= "{{ packages }}" state=absent
-  vars:
-    packages:
-    - heketi
-    - glusterfs-fuse
-    - glusterfs
-    - gluster-block
-    - glusterfs-events
-    - glusterfs-cli
-    - glusterfs-libs
-    - glusterfs-server
-
-
 - name: remove heketi package
   yum:
     name: heketi
