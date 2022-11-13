@@ -1,0 +1,11 @@
+
+- hosts: all
+  remote_user: root
+  roles:
+    - common
+
+- hosts: gluster-servers
+  remote_user: root
+  roles:
+    - gluster
+

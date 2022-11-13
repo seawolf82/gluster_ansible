@@ -1,0 +1,6 @@
+- name: Terminate running glusterfs and remove all files
+  hosts: gluster-servers
+  remote_user: root
+  roles:
+    - gluster_uninstall
+
