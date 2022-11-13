@@ -1,9 +1,18 @@
 ---
 
 - name: Install repository Gluster
-  yum: name=centos-release-gluster state=present
+  yum: 
+    name: centos-release-gluster9
+    state: present
+  when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] == "7" 
   tags: gluster
 
+- name: Install repository Gluster
+  dnf: 
+    name: centos-release-gluster9
+    state: present
+  when: (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] == "8") or (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] == "9") 
+  tags: gluster
 
 - name: ensure a list of gluster packages installed
   yum:
@@ -18,7 +27,21 @@
     - glusterfs-cli
     - glusterfs-libs
     - glusterfs-server
+  when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] == "7" 
   tags: gluster
+
+- name: ensure a list of gluster packages installed
+  dnf:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - glusterfs
+    - glusterfs-libs
+    - glusterfs-server
+  when: (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] == "8") or (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] == "9")
+  tags: gluster
+
+
 
 - name: enable Glusterd service
   systemd:
@@ -31,83 +54,4 @@
   systemd:
     state: started
     name: glusterd
-  tags: gluster
-
-
-- name: adding firewall rules for Gluster service
-  firewalld: 
-    service: glusterfs
-    permanent: true
-    state: enabled
-  tags: gluster
-
-- name: adding firewall rules for 24007/tcp Gluster Daemon 
-  firewalld: 
-    port: 24007/tcp
-    permanent: true
-    state: enabled 
-  tags: gluster
-  
-- name: adding firewall rules for 49152-49251/tcp Gluster brick port
-  firewalld:
-    port: 49152-49251/tcp
-    permanent: true
-    state: enabled
-  tags: gluster
-
-- name: adding firewall rules for 38465-38469/tcp Gluster NFS Service 
-  firewalld:
-    port: 38465-38469/tcp
-    permanent: true
-    state: enabled
-  tags: gluster
-
-- name: adding firewall rules for 111/TCP Portmapper 
-  firewalld:
-    port: 111/tcp 
-    permanent: true
-    state: enabled
-  tags: gluster
-  
-- name: adding firewall rules for 111/UDP Portmapper 
-  firewalld:
-    port: 111/udp
-    permanent: true
-    state: enabled
-  tags: gluster
-
-- name: adding firewall rules for 2049/tcp NFS Service 
-  firewalld:
-    port: 2049/tcp
-    permanent: true
-    state: enabled
-  tags: gluster
-  
-- name: adding firewall rules for 963/udp Gluster NFS's Lock Manager
-  firewalld: 
-    port: 963/udp
-    permanent: true
-    state: enabled
-  tags: gluster
-  
-- name: adding firewall rules for 139/tcp Netbios service
-  firewalld:
-    port: 139/tcp
-    permanent: true
-    state: enabled
-  tags: gluster
-  
-- name: adding firewall rules for 445/tcp CIFS Protocol
-  firewalld:
-    port: 445/tcp
-    permanent: true
-    state: enabled
-  tags: gluster
-
-- name: adding firewall rules for 965/tcp Gluster NFS's Lock Manager
-  firewalld:
-    port: 965/tcp
-    permanent: true
-    state: enabled
-  notify: Reloading firewalld rules
   tags: gluster

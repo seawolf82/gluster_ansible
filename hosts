@@ -1,9 +1,4 @@
 [all]
-gluster1.localdomain
-gluster2.localdomain
-gluster3.localdomain
-
+192.168.1.104
 [gluster-servers]
-gluster1.localdomain
-gluster2.localdomain
-gluster3.localdomain
+192.168.1.104

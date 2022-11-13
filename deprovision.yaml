@@ -3,4 +3,5 @@
   remote_user: root
   roles:
     - gluster_uninstall
+    - firewall_gluster_uninstall
 

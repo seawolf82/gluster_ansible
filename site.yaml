@@ -8,4 +8,5 @@
   remote_user: root
   roles:
     - gluster
+	  - firewall_gluster
 

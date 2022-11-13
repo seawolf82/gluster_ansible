@@ -13,139 +13,33 @@
   tags: gluster
 
 
-- name: remove heketi package
-  yum:
-    name: heketi
-    state: absent
+- name: main | uninstall Gluster\ packages
+  yum: >
+    pkg={{ item }}
+    state=absent
+  with_items:
+    - heketi
+    - glusterfs-fuse
+    - glusterfs
+    - gluster-block
+    - glusterfs-events
+    - glusterfs-cli
+    - glusterfs-libs
+    - glusterfs-server
+  when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] == "7" 
   tags: gluster
 
-- name: remove glusterfs-fuse package
-  yum:
-    name: glusterfs-fuse
-    state: absent
-  tags: gluster
+- name: main | uninstall Gluster packages
+  dnf: >
+    pkg={{ item }}
+    state=absent
+  with_items:
+    - glusterfs
+    - glusterfs-libs
+    - glusterfs-server
+  when: (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] == "8") or (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] == "9") 
+  tags: gluster  
 
-
-- name: remove glusterfs package
-  yum:
-    name: glusterfs
-    state: absent
-  tags: gluster
-
-- name: remove gluster-block package
-  yum:
-    name: gluster-block
-    state: absent
-  tags: gluster
-
-
-- name: remove glusterfs-events package
-  yum:
-    name: glusterfs-events
-    state: absent
-  tags: gluster
-
-
-- name: remove glusterfs-cli package
-  yum:
-    name: gluster-block
-    state: absent
-  tags: gluster
-
-
-- name: remove glusterfs-libs package
-  yum:
-    name: glusterfs-libs
-    state: absent
-  tags: gluster
-
-
-- name: remove glusterfs-server package
-  yum:
-    name: glusterfs-server
-    state: absent
-  tags: gluster
-
-
-- name: remove Gluster 4.1 repository 
-  yum: name=centos-release-gluster41 state=absent
-  tags: gluster
-
-
-- name: removing firewall rules for Gluster service
-  firewalld:
-    service: glusterfs
-    permanent: true
-    state: disabled
-  tags: gluster
-
-- name: removing firewall rules for 24007/tcp Gluster Daemon 
-  firewalld:
-    port: 24007/tcp
-    permanent: true
-    state: disabled
-  tags: gluster
-  
-- name: removing firewall rules for 49152-49251/tcp Gluster brick port
-  firewalld:
-    port: 49152-49251/tcp
-    permanent: true
-    state: disabled
-  tags: gluster
-
-- name: removing firewall rules for 38465-38469/tcp Gluster NFS Service 
-  firewalld:
-    port: 38465-38469/tcp
-    permanent: true
-    state: disabled
-  tags: gluster
-
-- name: removing firewall rules for 111/TCP Portmapper 
-  firewalld:
-    port: 111/tcp 
-    permanent: true
-    state: disabled
-  tags: gluster
-  
-- name: removing firewall rules for 111/UDP Portmapper 
-  firewalld:
-    port: 111/udp
-    permanent: true
-    state: disabled
-  tags: gluster
-
-- name: removing firewall rules for 2049/tcp NFS Service 
-  firewalld:
-    port: 2049/tcp
-    permanent: true
-    state: disabled
-  tags: gluster
-  
-- name: removing firewall rules for 963/udp Gluster NFS's Lock Manager
-  firewalld:
-    port: 963/udp
-    permanent: true
-    state: disabled
-  tags: gluster
-  
-- name: removing firewall rules for 139/tcp Netbios service
-  firewalld:
-    port: 139/tcp
-    permanent: true
-    state: disabled
-  tags: gluster
-  
-- name: removing firewall rules for 445/tcp CIFS Protocol
-  firewalld:
-    port: 445/tcp
-    permanent: true
-    state: disabled
-  tags: gluster
-
-- name: removing firewall rules for 965/tcp Gluster NFS's Lock Manager
-  firewalld:
-    port: 965/tcp
-    permanent: true
-    state: disabled
-  notify: Reloading firewalld rules
+- name: remove Gluster repository 
+  yum: name=centos-release-gluster9 state=absent
   tags: gluster
